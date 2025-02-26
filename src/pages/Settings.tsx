@@ -56,7 +56,7 @@ const Settings = () => {
                         name="school"
                         id="school"
                         placeholder="Drive School Name"
-                        defaultValue="E-license"
+                        defaultValue="ev-car-management"
                       />
                     </div>
                   </div> */}
