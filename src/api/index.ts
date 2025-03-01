@@ -1,6 +1,7 @@
 import axios from 'axios';
 import secureLocalStorage from 'react-secure-storage';
 import { Event } from '../types/event';
+import { LoginCredentials } from '../types/auth';
 // const API = axios.create({ baseURL: process.env.REACT_APP_BASE_URL })
 const API = axios.create({ baseURL: "http://localhost:8080" })
 
@@ -12,6 +13,43 @@ API.interceptors.request.use((req)=> {
     return req ;
 })
 
+
+/**
+ * 
+ * Instructor Apis
+ *  
+ */
+
+// export const fetchInstructors = () => API.get(`/instructors`); 
+// export const fetchInstructor = (id) => API.get(`/instructors`); 
+// export const createInstructor = (formData) => API.get(`/instructors`); 
+// export const deleteInstructor = (id) => API.get(`/instructors`); 
+// export const updateInstructor = (formData) => API.get(`/instructors`); 
+
+
+
+
+
+// Event API Calls
+export const fetchEvents = () => API.get("/events");
+export const fetchEventById = (id: string) => API.get(`/events/${id}`);
+export const createEvent = (eventData: Event) => API.post("/events", eventData);
+export const updateEvent = (eventData: Event) => API.put(`/events/${eventData.id}`, eventData);
+export const deleteEvent = (id: string) => API.delete(`/events/${id}`);
+
+
+export const getEligibleStudents = (lessonId: string, drivingSchoolId: string) => 
+    API.get(`/api/participations/eligible-students`, {
+      params: { lessonId, drivingSchoolId }
+    });
+export const getStudentParticipants = (eventId: string) => 
+  API.get(`/api/participations/students`, {
+    params: { eventId }
+  });
+
+    
+export const getLessons = () => API.get(`/api/lessons`) ;
+export const createEvent_participations = (requestData:any) => API.post(`/api/participations/create-event-with-participations`,requestData) ;
 
 
 // ----------------------------------------------------------------------------------------
@@ -41,6 +79,5 @@ API.interceptors.request.use((req)=> {
 // export const deleteComments_ByIdChapitre = (id) => API.delete(`/rooms/deleteComments/${id}`);
 
 
-export const signIn = (formData:any) => API.post(`/login`, formData);
+export const signIn = (formData:LoginCredentials) => API.post(`/login`, formData);
 // export const signUp = (formData) => API.post(`/users/signup`, formData);
-

@@ -3,11 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { loginUser, logout } from "../../store/slices/authSlice";
 import FuelImage from "../../images/car/login.jpg";
+import { useNavigate } from "react-router-dom";
+import secureLocalStorage from "react-secure-storage";
 
 const Login = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { authData, isLoading, error } = useSelector((state: RootState) => state.auth);
   const [formData, setFormData] = useState({ username: "", password: "" });
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

@@ -2,8 +2,10 @@ import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import secureLocalStorage from "react-secure-storage";
 import { AuthState, LoginCredentials } from "../../types/auth";
 import { signIn } from "../../api";
+import { useNavigate, useNavigation } from "react-router-dom";
 
 const TOKEN_KEY = "token";
+
 
 // Define initial state
 const initialState: AuthState = {
