@@ -1,11 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-// import instructorReducer from './slices/instructorSlice';
-import eventReducer from './slices/eventSlice';
+
+import authReducer from "./slices/authSlice";
 
 const store = configureStore({
   reducer: {
-    // instructor: instructorReducer,
-    event: eventReducer,
+    auth: authReducer,
   },
   devTools: process.env.NODE_ENV !== "production",
 });
