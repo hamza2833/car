@@ -1,10 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import authReducer from "./slices/authSlice";
+import fleetReducer from "./slices/fleetSlice";
+
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
+    fleet: fleetReducer,
   },
   devTools: process.env.NODE_ENV !== "production",
 });

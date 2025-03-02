@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import { ChevronLeft, ChevronRight, Edit } from "lucide-react";
 import { FaTools, FaSave, FaChevronLeft, FaChevronRight, FaStar } from "react-icons/fa";
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { AppDispatch, RootState } from '../../../store/store';
+import { addFleet, getFleets } from '../../../store/slices/fleetSlice';
 
 const entitiesData = [
   {
@@ -35,6 +38,14 @@ const entitiesData = [
 ];
 
 const EntitiesTable = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { fleets, isLoading, error } = useSelector((state: RootState) => state.fleet);
+
+  useEffect(() => {
+    dispatch(getFleets(1));
+    console.log(fleets);
+  }, [dispatch]);
+  
   return (
     <div className="overflow-x-auto bg-white dark:bg-gray-900 p-4 rounded-lg shadow-lg">
       <table className="w-full border-collapse text-left text-black dark:text-white">
@@ -80,10 +91,37 @@ const EntitiesTable = () => {
 };
 
 const EntitySidebar = ({ isOpen, onClose }: any) => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  // État local pour le formulaire
+  const [formData, setFormData] = useState({
+    nameEts: "",
+    refDossier: "",
+    nameGestionner: "",
+    email: "",
+    tele: "",
+    address: "",
+  });
+
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = () => {
+    // if (!managerId) {
+    //   alert("Manager ID manquant !");
+    //   return;
+    // }
+
+    dispatch(addFleet({ id: 1, fleetData: formData }));
+    onClose(); 
+  };
+
   return (
     <div
-      className={`fixed  z-9999 right-0 top-0 h-full w-115 overflow-y-auto bg-boxdark text-white shadow-lg transition-transform ${
-        isOpen ? 'translate-x-0' : 'translate-x-full'
+      className={`fixed z-9999 right-0 top-0 h-full w-115 overflow-y-auto bg-boxdark text-white shadow-lg transition-transform ${
+        isOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >
       <div className="p-4 flex justify-between border-b border-gray-700">
@@ -94,86 +132,81 @@ const EntitySidebar = ({ isOpen, onClose }: any) => {
       </div>
       <div className="p-4 space-y-4">
         <div>
-          <label className="block text-sm text-gray-400 mb-1">Legal Name</label>
+          <label className="block text-sm text-gray-400 mb-1">Nom de l'entreprise</label>
           <input
+            name="nameEts"
+            value={formData.nameEts}
+            onChange={handleChange}
             className="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-primary"
-            placeholder="Add legal name"
+            placeholder="Nom de l'entreprise"
           />
         </div>
         <div>
-          <label className="block text-sm text-gray-400 mb-1">VAT Number</label>
+          <label className="block text-sm text-gray-400 mb-1">Référence Dossier</label>
           <input
+            name="refDossier"
+            value={formData.refDossier}
+            onChange={handleChange}
             className="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-primary"
-            placeholder="Add VAT number"
+            placeholder="Référence dossier"
           />
         </div>
         <div>
-          <label className="block text-sm text-gray-400 mb-1">PO Number</label>
+          <label className="block text-sm text-gray-400 mb-1">Nom du Gestionnaire</label>
           <input
+            name="nameGestionner"
+            value={formData.nameGestionner}
+            onChange={handleChange}
             className="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-primary"
-            placeholder="Add PO number"
+            placeholder="Nom du gestionnaire"
           />
         </div>
         <div>
-          <label className="block text-sm text-gray-400 mb-1">Address</label>
+          <label className="block text-sm text-gray-400 mb-1">Email</label>
           <input
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
             className="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-primary"
-            placeholder="Add street and number"
-          />
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">
-              Postal Code
-            </label>
-            <input
-              className="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-primary"
-              placeholder="Add code"
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">City</label>
-            <input
-              className="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-primary"
-              placeholder="Add city"
-            />
-          </div>
-        </div>
-        <div>
-          <label className="block text-sm text-gray-400 mb-1">Region</label>
-          <input
-            className="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-primary"
-            placeholder="Add region"
+            placeholder="Email"
           />
         </div>
         <div>
-          <label className="block text-sm text-gray-400 mb-1">Country</label>
+          <label className="block text-sm text-gray-400 mb-1">Téléphone</label>
           <input
+            name="tele"
+            value={formData.tele}
+            onChange={handleChange}
             className="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-primary"
-            placeholder="Add country"
+            placeholder="Téléphone"
           />
         </div>
         <div>
-          <label className="block text-sm text-gray-400 mb-1">
-            Invoicing Email Address
-          </label>
+          <label className="block text-sm text-gray-400 mb-1">Adresse</label>
           <input
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
             className="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-primary"
-            placeholder="Add email"
+            placeholder="Adresse"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-        <button className="w-full p-3 bg-red-600 hover:bg-red-700 rounded-lg font-semibold flex items-center gap-2">
-        <FaSave /> 
-        <span className='ml-3'>Save</span>
-      </button>
-        <button
-          onClick={onClose}
-          className="w-full p-3 bg-gray-700 hover:bg-gray-600 rounded-lg font-semibold"
-        >
-          Cancel
-        </button>
+          <button
+            onClick={handleSubmit}
+            className="w-full p-3 bg-red-600 hover:bg-red-700 rounded-lg font-semibold flex items-center gap-2"
+          >
+            <FaSave />
+            <span className="ml-3">Enregistrer</span>
+          </button>
+          <button
+            onClick={onClose}
+            className="w-full p-3 bg-gray-700 hover:bg-gray-600 rounded-lg font-semibold"
+          >
+            Annuler
+          </button>
         </div>
       </div>
     </div>
@@ -182,6 +215,8 @@ const EntitySidebar = ({ isOpen, onClose }: any) => {
 
 const EntitiesPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  
 
   return (
     // <div className="p-6 ">
