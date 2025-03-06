@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DashboardCard from './components/DashboardCard';
 import {
   FaChevronLeft,
@@ -8,6 +8,12 @@ import {
 } from 'react-icons/fa';
 import DriverSidebar from './components/DriverSidebar';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store/store';
+import { getFleets } from '../../store/slices/fleetSlice';
+import {fetchAllFleets} from '../../store/slices/fleetCardSlice';
+import secureLocalStorage from 'react-secure-storage';
+import {jwtDecode} from 'jwt-decode';
 
 const fleetData = [
   {
@@ -141,12 +147,66 @@ const fleetData = [
   },
 ];
 function DashboardCar() {
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState('July 2024');
-  const [selectedFleet, setSelectedFleet] = useState('wisemen');
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(20);
+
+  const dispatch = useDispatch<AppDispatch>();
+  const { fleets, isLoading, error } = useSelector((state: RootState) => state.fleet);
+
+  const { fleetCard} = useSelector((state: RootState) => state.fleetCard);
+
+  const [selectedFleet, setSelectedFleet] = useState(fleets[0]?.nameEts || '');
+
+
+  const getUserIdFromToken = () => {
+    const token = secureLocalStorage.getItem("token"); // Récupère le token stocké
+    if (!token) return null; // Vérifie si le token est présent
+  
+    try {
+      const decodedToken: any = jwtDecode(token); // Décode le token
+      return decodedToken.id; // Retourne l'ID
+    } catch (error) {
+      console.error("Erreur lors du décodage du token:", error);
+      return null;
+    }
+  };
+
+  // useEffect(() => {
+    
+  //   dispatch(getFleets(getUserIdFromToken())); 
+  //   dispatch(fetchAllFleets(selectedFleet))
+  //   console.log('fleets',fleets)
+  //   console.log('fleetCard',fleetCard)
+  //   console.log('isLoading',secureLocalStorage.getItem("token"));
+  //   console.log('idAdmin',getUserIdFromToken());
+  //   // Charge les données dès le montage du composant
+  // }, [dispatch]);
+
+  useEffect(() => {
+    if (fleets.length > 0) {
+      setSelectedFleet(fleets[0].nameEts); 
+    }
+  }, [fleets]);
+  
+  useEffect(() => {
+    const userId = getUserIdFromToken();
+    if (userId) {
+      dispatch(getFleets(userId)); 
+    }
+  }, [dispatch]);
+  
+  useEffect(() => {
+    if (selectedFleet) {
+      dispatch(fetchAllFleets(selectedFleet));
+    }
+  }, [dispatch, selectedFleet]);
+  
+
+
 
   const filteredDrivers =
     fleetData.find(
@@ -186,8 +246,11 @@ function DashboardCar() {
               value={selectedFleet}
               onChange={(e) => setSelectedFleet(e.target.value)}
             >
-              <option value="wisemen">Wisemen</option>
-              <option value="eevee">EEVEE</option>
+             {
+                fleets.map((fleet) => (
+                  <option key={fleet.id} value={fleet.id}>{fleet.nameEts}</option>
+                ))
+             }
             </select>
           </div>
         </div>
@@ -231,7 +294,7 @@ function DashboardCar() {
           bgColor="bg-gradient-to-r from-green-500 to-teal-500"
         />
       </div>
-      {displayedDrivers.length > 0 ? (
+      {fleetCard.length > 0 ? (
         <div>
           <div className="overflow-x-auto bg-white dark:bg-gray-900 p-4 rounded-lg shadow-lg">
             <table className="w-full border-collapse text-left text-black dark:text-white">
@@ -247,18 +310,18 @@ function DashboardCar() {
                 </tr>
               </thead>
               <tbody>
-                {displayedDrivers.map((driver, index) => (
+                {fleetCard.map((driver, index) => (
                   <tr onClick={()=> navigate("/scene")}
                     key={index}
                     className="cursor-pointer border-b border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
                   >
-                    <td className="p-3">{driver.name}</td>
-                    <td className="p-3">{driver.totalCost}</td>
-                    <td className="p-3">{driver.home}</td>
-                    <td className="p-3">{driver.public}</td>
-                    <td className="p-3">{driver.work}</td>
+                    <td className="p-3">{driver.driverName}</td>
+                    <td className="p-3">{driver.energieTotal}</td>
+                    <td className="p-3">{driver.energieWork}</td>
+                    <td className="p-3">{driver.energieHome}</td>
+                    <td className="p-3">{driver.energiePublic}</td>
                     <td className="p-3">{driver.distance}</td>
-                    <td className="p-3">{driver.costPer100km}</td>
+                    <td className="p-3">N/A</td>
                   </tr>
                 ))}
               </tbody>

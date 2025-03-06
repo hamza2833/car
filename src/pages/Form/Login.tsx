@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { loginUser, logout } from "../../store/slices/authSlice";
-import FuelImage from "../../images/car/login.jpg";
+import FuelImage from "../../images/car/image.png";
 import { useNavigate } from "react-router-dom";
 import secureLocalStorage from "react-secure-storage";
 
@@ -19,6 +19,7 @@ const Login = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(loginUser(formData));
+    navigate("/calendar");
   };
 
   const handleLogout = () => {
@@ -30,7 +31,7 @@ const Login = () => {
       {/* Left Panel */}
       <div className="w-full md:max-w-md px-6 md:px-10 py-12 bg-white dark:bg-boxdark shadow-lg flex flex-col justify-center">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-          {authData ? "Welcome Back!" : "Log in to EEVEE Business"}
+          {authData ? "Welcome Back!" : "Log in to ChargiZ"}
         </h1>
 
         {authData ? (
@@ -97,7 +98,7 @@ const Login = () => {
             </form>
             <div className="mt-6 text-center">
               <p className="text-gray-600 dark:text-bodydark">
-                Is your company not using EEVEE yet?
+                Is your company not using ChargiZ yet?
                 <a href="#" className="text-primary font-medium hover:underline ml-1">
                   Get started
                 </a>

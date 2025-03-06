@@ -31,6 +31,8 @@ export const addFleet = createAsyncThunk("fleet/add", async ({id, fleetData }: {
   }
 });
 
+
+
 // export const editFleet = createAsyncThunk("fleet/edit", async (fleetData: Fleet, { rejectWithValue }) => {
 //   try {
 //     const response = await updateFleet(fleetData.id, fleetData);
@@ -75,10 +77,7 @@ const fleetSlice = createSlice({
       .addCase(addFleet.fulfilled, (state, action: PayloadAction<Fleet>) => {
         state.fleets.push(action.payload);
       })
-    //   .addCase(editFleet.fulfilled, (state, action: PayloadAction<Fleet>) => {
-    //     const index = state.fleets.findIndex(f => f.nameEts === action.payload.nameEts);
-    //     if (index !== -1) state.fleets[index] = action.payload;
-    //   })
+
     //   .addCase(removeFleet.fulfilled, (state, action: PayloadAction<number>) => {
     //     state.fleets = state.fleets.filter(f => f.nameEts !== action.payload.toString());
     //   });

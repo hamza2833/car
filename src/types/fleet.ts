@@ -1,4 +1,5 @@
 export interface Fleet {
+    id: number;
     nameEts: string;
     refDossier: string | null;
     address: string | null;
@@ -23,4 +24,8 @@ export interface Fleet {
     tele?: string | null;
     numdrivers?: string;
   }
+
+  
+
+
   

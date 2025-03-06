@@ -4,6 +4,7 @@ import { Event } from '../types/event';
 import { LoginCredentials } from '../types/auth';
 
 import { Fleet, FleetFormData } from "../types/fleet";
+import { CarDto, FleetCard } from "../types/fleetCard";
 
 // const API = axios.create({ baseURL: process.env.REACT_APP_BASE_URL })
 const API = axios.create({ baseURL: "http://localhost:8080" })
@@ -88,6 +89,12 @@ export const signIn = (formData:LoginCredentials) => API.post(`/login`, formData
 export const fetchFleets = (id: number) => API.get<Fleet[]>(`/get-managers-fleet/${id}`);
 
 export const createFleet = (id:number,fleetData: FleetFormData) => API.post<Fleet>(`/ajouter-manager-fleet/${id}`, fleetData);
+
+export const getAllFleets = (id : number) => API.get<FleetCard[]>(`/get-all/${id}`);
+
+export const getDriverToCar = (idDriver: number, vin: string) => API.get<CarDto>(`/driver-to-car?idDriver=${idDriver}&vin=${vin}`);
+
+
 // export const updateFleet = (id: number, fleetData: FleetFormData) => axios.put<Fleet>(`${API_URL}/${id}`, fleetData);
 // export const deleteFleet = (id: number) => axios.delete(`${API_URL}/${id}`);
 

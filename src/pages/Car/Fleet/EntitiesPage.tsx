@@ -51,28 +51,28 @@ const EntitiesTable = () => {
       <table className="w-full border-collapse text-left text-black dark:text-white">
         <thead>
           <tr className="border-b border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-400">
-            <th className="p-3">Description</th>
-            <th className="p-3">VAT Number</th>
-            <th className="p-3">Legal Name</th>
-            <th className="p-3">Address</th>
-            <th className="p-3">Includes</th>
+           <th className="p-3">Nom de l'Entreprise</th>
+           <th className="p-3">Référence Dossier</th>
+           <th className="p-3">Nom du Gestionnaire</th>
+           <th className="p-3">Email</th>
+           <th className="p-3">Téléphone</th>
+           <th className="p-3">Adresse</th>
+           <th className="p-3">Nombre de Conducteurs</th>
           </tr>
         </thead>
         <tbody>
-          {entitiesData.map((entity, index) => (
+          {fleets.map((entity, index) => (
             <tr
-              
               key={index}
               className="border-b border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
             >
-              <td className="p-3 flex items-center gap-2">
-                {entity.description}
-                {/* <Star size={14} className="text-gray-500 dark:text-gray-400" /> */}
-              </td>
-              <td className="p-3">{entity.vat}</td>
-              <td className="p-3">{entity.legalName}</td>
-              <td className="p-3">{entity.address}</td>
-              <td className="p-3">{entity.includes}</td>
+              <td className="p-3">{entity.nameEts || "N/A"}</td>
+              <td className="p-3">{entity.refDossier || "N/A"}</td>
+              <td className="p-3">{entity.nameGestionner || "N/A"}</td>
+              <td className="p-3">{entity.email || "N/A"}</td>
+              <td className="p-3">{entity.tele || "N/A"}</td>
+              <td className="p-3">{entity.address ? entity.address : "Non spécifiée"}</td>
+              <td className="p-3">{entity.numdrivers || "0"} drivers</td>
             </tr>
           ))}
         </tbody>
