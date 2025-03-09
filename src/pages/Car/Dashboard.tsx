@@ -14,6 +14,7 @@ import { getFleets } from '../../store/slices/fleetSlice';
 import {fetchAllFleets} from '../../store/slices/fleetCardSlice';
 import secureLocalStorage from 'react-secure-storage';
 import {jwtDecode} from 'jwt-decode';
+import { getUserFromToken } from '../../utils/User';
 
 const fleetData = [
   {
@@ -146,6 +147,66 @@ const fleetData = [
     ],
   },
 ];
+
+const fleetCardMock = [
+  {
+    driverName: "rachid-rachid",
+    energieTotal: "60Kwh",
+    energieHome: "24Kwh",
+    energiePublic: "18Kwh",
+    energieWork: "18Kwh",
+    distance: "40km",
+  },
+  {
+    driverName: "hamza-hamza",
+    energieTotal: "8029Kwh",
+    energieHome: "1143Kwh",
+    energiePublic: "6643Kwh",
+    energieWork: "243Kwh",
+    distance: "271km",
+  },
+  {
+    driverName: "khalid-khalid",
+    energieTotal: "1494Kwh",
+    energieHome: "918Kwh",
+    energiePublic: "333Kwh",
+    energieWork: "243Kwh",
+    distance: "89km",
+  },
+  {
+    driverName: "ahmed-ahmed",
+    energieTotal: "1474Kwh",
+    energieHome: "918Kwk",
+    energiePublic: "98Kwh",
+    energieWork: "458Kwh",
+    distance: "199km",
+  },
+  {
+    driverName: "samir-samir",
+    energieTotal: "0Kwh",
+    energieHome: "0Kwh",
+    energiePublic: "0Kwh",
+    energieWork: "0Kwh",
+    distance: "0km",
+  },
+  {
+    driverName: "rayan-rayan",
+    energieTotal: "0Kwh",
+    energieHome: "0Kwh",
+    energiePublic: "0Kwh",
+    energieWork: "0Kwh",
+    distance: "0km",
+  },
+  {
+    driverName: "oussama-oussama",
+    energieTotal: "0Kwh",
+    energieHome: "0Kwh",
+    energiePublic: "0Kwh",
+    energieWork: "0Kwh",
+    distance: "0km",
+  }
+]
+
 function DashboardCar() {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -154,16 +215,17 @@ function DashboardCar() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(20);
 
+
   const dispatch = useDispatch<AppDispatch>();
   const { fleets, isLoading, error } = useSelector((state: RootState) => state.fleet);
 
   const { fleetCard} = useSelector((state: RootState) => state.fleetCard);
 
-  const [selectedFleet, setSelectedFleet] = useState(fleets[0]?.nameEts || '');
+  const [selectedFleet, setSelectedFleet] = useState('Dlogistique');
 
 
   const getUserIdFromToken = () => {
-    const token = secureLocalStorage.getItem("token"); // Récupère le token stocké
+    const token:any = secureLocalStorage.getItem("token"); // Récupère le token stocké
     if (!token) return null; // Vérifie si le token est présent
   
     try {
@@ -187,25 +249,31 @@ function DashboardCar() {
   // }, [dispatch]);
 
   useEffect(() => {
-    if (fleets.length > 0) {
-      setSelectedFleet(fleets[0].nameEts); 
-    }
+    //if (fleets.length > 0) {
+     // setSelectedFleet(fleets[0]?.nameEts); 
+     setSelectedFleet('Dlogistique'); 
+  //  }
   }, [fleets]);
   
   useEffect(() => {
     const userId = getUserIdFromToken();
-    if (userId) {
+    //if (userId) {
       dispatch(getFleets(userId)); 
-    }
+    //}
   }, [dispatch]);
   
   useEffect(() => {
-    if (selectedFleet) {
-      dispatch(fetchAllFleets(selectedFleet));
-    }
+    dispatch(fetchAllFleets(selectedFleet));
+    // if (selectedFleet) {
+    // }
   }, [dispatch, selectedFleet]);
-  
 
+  
+  //  useEffect(() => {
+  //         if (!getUserFromToken()) navigate('/auth/signin')
+  //     }, [])
+  
+    
 
 
   const filteredDrivers =
@@ -220,6 +288,27 @@ function DashboardCar() {
   );
 
     const navigate = useNavigate();
+
+    const totalAll = fleetCardMock.reduce((sum, driver) => {
+      const numericCost = parseFloat(driver.energieTotal.replace('Kwh', '').replace(',', '.'));
+      return sum + (isNaN(numericCost) ? 0 : numericCost);
+    }, 0);
+
+  const totalWork = fleetCardMock.reduce((sum, driver) => {
+      const numericCost = parseFloat(driver.energieWork.replace('Kwh', '').replace(',', '.'));
+      return sum + (isNaN(numericCost) ? 0 : numericCost);
+    }, 0);
+
+  const totalHome = fleetCardMock.reduce((sum, driver) => {
+      const numericCost = parseFloat(driver.energieHome.replace('Kwh', '').replace(',', '.'));
+      return sum + (isNaN(numericCost) ? 0 : numericCost);
+    }, 0);
+                     //fleetCard
+  const totalPubic = fleetCardMock.reduce((sum, driver) => {
+      const numericCost = parseFloat(driver.energiePublic.replace('Kwh', '').replace(',', '.'));
+      return sum + (isNaN(numericCost) ? 0 : numericCost);
+    }, 0);
+  
   
 
   return (
@@ -227,6 +316,7 @@ function DashboardCar() {
       <DriverSidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
+        idManagerFleet={selectedFleet}
       />
 
       <div className="flex justify-between items-center mb-4">
@@ -246,11 +336,13 @@ function DashboardCar() {
               value={selectedFleet}
               onChange={(e) => setSelectedFleet(e.target.value)}
             >
-             {
-                fleets.map((fleet) => (
-                  <option key={fleet.id} value={fleet.id}>{fleet.nameEts}</option>
-                ))
-             }
+             {/* {
+                // fleets.map((fleet) => (
+                //   <option key={fleet.id} value={fleet.id}>{fleet.nameEts}</option>
+                // ))
+                
+             } */}
+             <option value="Dlogistique">Dlogistique</option>
             </select>
           </div>
         </div>
@@ -267,34 +359,36 @@ function DashboardCar() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
         <DashboardCard
           title="All locations"
-          amount="€2,734"
+          amount={`€${(parseFloat(totalAll.toFixed(0)) * 0.2016).toFixed(2)}`}
           average="€107"
           icon={<span className="text-xl">📊</span>}
           bgColor="bg-gradient-to-r from-orange-500 to-pink-500"
         />
         <DashboardCard
           title="Home"
-          amount="€1,003"
+          amount={`€${(parseFloat(totalHome.toFixed(0)) * 0.2016).toFixed(2)}`}
           average="€44"
           icon={<span className="text-xl">🏠</span>}
           bgColor="bg-gradient-to-r from-yellow-500 to-orange-500"
         />
         <DashboardCard
           title="Public"
-          amount="€1,298"
+          amount={`€${(parseFloat(totalPubic.toFixed(0)) * 0.2016).toFixed(2)}`}
           average="€41"
           icon={<span className="text-xl">🚏</span>}
           bgColor="bg-gradient-to-r from-pink-500 to-red-500"
         />
         <DashboardCard
           title="Work"
-          amount="~€434"
+          amount={`€${(parseFloat(totalWork.toFixed(0)) * 0.2016).toFixed(2)}`}
           average="€23"
           icon={<span className="text-xl">💼</span>}
           bgColor="bg-gradient-to-r from-green-500 to-teal-500"
         />
       </div>
-      {fleetCard.length > 0 ? (
+      {//fleetCard.length > 0 ? (
+      fleetCardMock.length > 0 ? (
+
         <div>
           <div className="overflow-x-auto bg-white dark:bg-gray-900 p-4 rounded-lg shadow-lg">
             <table className="w-full border-collapse text-left text-black dark:text-white">
@@ -310,7 +404,8 @@ function DashboardCar() {
                 </tr>
               </thead>
               <tbody>
-                {fleetCard.map((driver, index) => (
+                {//fleetCard.map((driver, index) => (
+                fleetCardMock.map((driver, index) => (
                   <tr onClick={()=> navigate("/scene")}
                     key={index}
                     className="cursor-pointer border-b border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition"

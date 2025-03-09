@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getAllFleets } from "../../api"; // Assurez-vous que fetchAllFleets est importé correctement
-import { FleetCard } from '../../types/fleetCard'; // Assurez-vous que les types sont bien importés
+import { addDriverToCar, getAllFleets } from "../../api"; // Assurez-vous que fetchAllFleets est importé correctement
+import { DriverDto, FleetCard } from '../../types/fleetCard'; // Assurez-vous que les types sont bien importés
 
 const initialState = {
   fleetCard: [] as FleetCard[], // Liste des flottes
-  isLoadingCard: false, // Indicateur de chargement
-  errorCard: null as string | null, // Gestion des erreurs
+  isLoading: false, // Indicateur de chargement
+  error: null as string | null, // Gestion des erreurs
 };
 
 
@@ -21,6 +21,21 @@ export const fetchAllFleets = createAsyncThunk('fleet/getAllfleets', // Le nom d
       }
     });
 
+
+  export const AddDriver = createAsyncThunk(
+      'fleet/AddDriver',
+      async ({ idManagerFleet, vin, driver }: { idManagerFleet: number; vin: string, driver: DriverDto },{rejectWithValue }) => {
+          try {
+              const response = await addDriverToCar(idManagerFleet, vin, driver);
+              return response.data;
+          } catch (error: any) {
+              if (error.response && error.response.data) {
+                  return rejectWithValue(error.response.data);
+              }
+              return rejectWithValue('Erreur inconnue');
+          }
+      }
+  );
   
 
 const fleetCardSlice = createSlice({
@@ -28,23 +43,35 @@ const fleetCardSlice = createSlice({
   initialState,
   reducers: {
     clearFleetError: (state) => {
-      state.errorCard = null;
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllFleets.pending, (state) => {
-        state.isLoadingCard = true;
-        state.errorCard = null;
+        state.isLoading = true;
+        state.error = null;
       })
       .addCase(fetchAllFleets.fulfilled, (state, action: PayloadAction<FleetCard[]>) => {
-        state.isLoadingCard = false;
+        state.isLoading = false;
         state.fleetCard = action.payload; // On met à jour les flottes avec celles récupérées de l'API
       })
       .addCase(fetchAllFleets.rejected, (state, action) => {
-        state.isLoadingCard = false;
-        state.errorCard = action.payload as string; // On stocke l'erreur si elle se produit
-      });
+        state.isLoading = false;
+        state.error = action.payload as string; // On stocke l'erreur si elle se produit
+      })
+       .addCase(AddDriver.pending, (state) => {
+                      state.isLoading = true;
+                      state.error = null;
+                  })
+                  .addCase(AddDriver.fulfilled, (state, action) => {
+                      state.isLoading = false;
+                      state.fleetCard.push(action.payload) ;
+                  })
+                  .addCase(AddDriver.rejected, (state, action) => {
+                      state.isLoading = false;
+                      state.error = action.payload as string;
+          });
   },
 });
 

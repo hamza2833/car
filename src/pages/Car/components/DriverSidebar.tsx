@@ -2,16 +2,20 @@ import { useEffect, useState } from "react";
 import { FaSave } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
-import { fetchDriverToCar } from "../../../store/slices/carSlice";
-import {fetchAllFleets} from "../../../store/slices/fleetCardSlice";
+//import { fetchDriverToCar } from "../../../store/slices/carSlice";
+import {fetchAllFleets,AddDriver} from "../../../store/slices/fleetCardSlice";
 
 
-const DriverSidebar = ({ isOpen, onClose }: any) => {
-  const dispatch = useDispatch();
+const DriverSidebar = ({ isOpen, onClose ,idManagerFleet}: any) => {
+  const dispatch = useDispatch<AppDispatch>();
   // const {driverCar} = useSelector((state: RootState) => state.driverCar);
   // const {fleetCard} = useSelector((state: RootState) => state.fleetCard);
   
-  const [email, setEmail] = useState("");
+  const [driverDto, setDriverDto] = useState({
+    name: "",
+    prenom: "",
+    address: "",
+  });
   const [selectedFleet, setSelectedFleet] = useState("");
 
 
@@ -20,14 +24,15 @@ const DriverSidebar = ({ isOpen, onClose }: any) => {
   // }, [dispatch]);
   
   const handleSave = () => {
-    console.log("Email:", email);
+    console.log("DriverDto:", driverDto);
+    console.log("idManagerFleet :", idManagerFleet);
     console.log("Selected Fleet:", selectedFleet);
 
     // Appeler une action Redux ou une API avec ces valeurs
-    dispatch(fetchDriverToCar({ idDriver: email, vin: selectedFleet }));
+    dispatch(AddDriver({idManagerFleet, vin: selectedFleet ,driver: driverDto}));
 
     onClose(); // Fermer la sidebar après la soumission
-  };
+  };  
   
   return (
     <div
@@ -44,13 +49,33 @@ const DriverSidebar = ({ isOpen, onClose }: any) => {
         </div>
         <div className="p-4 space-y-4">
           <div>
-            <label className="block text-sm text-gray-400 mb-1">ADD DRIVERS</label>
+            <label className="block text-sm text-gray-400 mb-1">FIRST NAME</label>
             <input
               className="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-primary"
-              placeholder="Enter email"
-              type='email'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              placeholder="name driver"
+              type='text'
+              value={driverDto.name}
+              onChange={(e) => setDriverDto({...driverDto,name:e.target.value})}
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-400 mb-1">LAST NAME</label>
+            <input
+              className="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-primary"
+              placeholder="prenom driver"
+              type='text'
+              value={driverDto.prenom}
+              onChange={(e) => setDriverDto({...driverDto,prenom:e.target.value})}
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-400 mb-1">ADDRESS </label>
+            <input
+              className="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-primary"
+              placeholder="address driver"          
+              type='text'
+              value={driverDto.address}
+              onChange={(e) => setDriverDto({...driverDto,address:e.target.value})}
             />
           </div>
           <div>

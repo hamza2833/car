@@ -5,44 +5,71 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { AppDispatch, RootState } from '../../../store/store';
 import { addFleet, getFleets } from '../../../store/slices/fleetSlice';
+import secureLocalStorage from 'react-secure-storage';
+import {jwtDecode} from 'jwt-decode';
+
 
 const entitiesData = [
-  {
-    description: 'Wisemen',
-    vat: 'BE0503920245',
-    legalName: 'Wisemen BV',
-    address: '2 Watertorenstraat, Diepenbeek',
-    includes: '33/44 drivers',
-  },
-  {
-    description: 'EEVEE Mobility',
-    vat: 'BE0747470815',
-    legalName: 'EEVEE BV',
-    address: 'Watertorenstraat 2, Diepenbeek',
-    includes: '9/44 drivers',
-  },
-  {
-    description: 'Banzai',
-    vat: 'BE0713960877',
-    legalName: "FIREWISE STUDIO'S BV",
-    address: 'Watertorenstraat 2, Diepenbeek',
-    includes: '2/44 drivers',
-  },
-  {
-    description: 'Make-IT-Fit',
-    vat: 'BE0686853634',
-    legalName: 'Make-IT-Fit BV',
-    address: 'Watertorenstraat 2, Diepenbeek',
-    includes: '0/44 drivers',
-  },
+    {
+      nameEts: "Dlogitique",
+      refDossier : "R124567",
+      nameGestionner: "hassan",
+      email: "hassan@chargiZ",
+      tele: "0743534365",
+      address: "casa",
+      numdrivers: "8 "
+    },
+    {
+      nameEts: "hamrokat",
+      refDossier: "Rref234",
+      nameGestionner: "abdslam",
+      email: "adbslam@chargiZ",
+      tele: "062345678",
+      address: "khouribga",
+      numdrivers: "1 "
+    },
+    {
+      nameEts: "tesla",
+      refDossier: "R123456",
+      nameGestionner: "hamza",
+      email: "hamza@tesla.com",
+      tele: "0645454545",
+      address: "Non spécifiée",
+      numdrivers: "0 "
+    },
+    {
+      nameEts: "raja",
+      refDossier: "Ref234",
+      nameGestionner: "amine",
+      email: "amine@chargiZ.com",
+      tele: "N/A",
+      address: "Non spécifiée",
+      numdrivers: "1 "
+    }
+  
 ];
+
+
+const getUserIdFromToken = () => {
+  const token:any = secureLocalStorage.getItem("token"); // Récupère le token stocké
+  if (!token) return null; // Vérifie si le token est présent
+
+  try {
+    const decodedToken: any = jwtDecode(token); // Décode le token
+    return decodedToken.id; // Retourne l'ID
+  } catch (error) {
+    console.error("Erreur lors du décodage du token:", error);
+    return null;
+  }
+};
 
 const EntitiesTable = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { fleets, isLoading, error } = useSelector((state: RootState) => state.fleet);
 
+
   useEffect(() => {
-    dispatch(getFleets(1));
+    dispatch(getFleets(getUserIdFromToken()));
     console.log(fleets);
   }, [dispatch]);
   
@@ -51,17 +78,18 @@ const EntitiesTable = () => {
       <table className="w-full border-collapse text-left text-black dark:text-white">
         <thead>
           <tr className="border-b border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-400">
-           <th className="p-3">Nom de l'Entreprise</th>
-           <th className="p-3">Référence Dossier</th>
-           <th className="p-3">Nom du Gestionnaire</th>
+           <th className="p-3">Company Name</th>
+           <th className="p-3">File Reference</th>
+           <th className="p-3">Manager Name</th>
            <th className="p-3">Email</th>
-           <th className="p-3">Téléphone</th>
-           <th className="p-3">Adresse</th>
-           <th className="p-3">Nombre de Conducteurs</th>
+           <th className="p-3">Phone</th>
+           <th className="p-3">Address</th>
+           <th className="p-3">Number of Drivers</th>
           </tr>
         </thead>
         <tbody>
-          {fleets.map((entity, index) => (
+          {//fleets.map((entity, index) => (
+          entitiesData.map((entity, index) => (
             <tr
               key={index}
               className="border-b border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
@@ -114,7 +142,7 @@ const EntitySidebar = ({ isOpen, onClose }: any) => {
     //   return;
     // }
 
-    dispatch(addFleet({ id: 1, fleetData: formData }));
+    dispatch(addFleet({ id: getUserIdFromToken(), fleetData: formData }));
     onClose(); 
   };
 

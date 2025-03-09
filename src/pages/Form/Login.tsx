@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { loginUser, logout } from "../../store/slices/authSlice";
 import FuelImage from "../../images/car/image.png";
 import { useNavigate } from "react-router-dom";
 import secureLocalStorage from "react-secure-storage";
+import { getUserFromToken } from "../../utils/User";
 
 const Login = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -18,14 +19,23 @@ const Login = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(loginUser(formData));
-    navigate("/calendar");
+    dispatch(loginUser(formData)).unwrap()
+    .then(() => {
+      navigate("/Fleet"); // Redirection après connexion réussie
+    })
+    .catch((err) => {
+      console.error("Login failed:", err);
+    });
+   
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
-  };
+ 
 
+
+    useEffect(() => {
+        if (getUserFromToken()) navigate('/')
+    }, [])
+  
   return (
     <div className="flex h-screen w-full bg-white dark:bg-graydark flex-col md:flex-row">
       {/* Left Panel */}
@@ -40,7 +50,6 @@ const Login = () => {
               You are logged in.
             </p>
             <button
-              onClick={handleLogout}
               className="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
             >
               Logout

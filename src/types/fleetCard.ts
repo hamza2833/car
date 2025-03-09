@@ -9,9 +9,15 @@ export interface FleetCard {
   }
 
 
-export interface CarDto {
-  vin: string;
-  marque: string;
-  driverName: string;
+// export interface CarDto {
+//   vin: string;
+//   marque: string;
+//   driverName: string;
 
+// }
+
+export interface DriverDto {
+    name:String;
+    prenom:String;
+    address:String;
 }

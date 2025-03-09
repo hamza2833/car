@@ -60,7 +60,7 @@ function App() {
 
 
         <Route
-          element={<DashbordLayout />}>
+          element={<DashbordLayout />}> 
         <Route
           index
           element={
@@ -71,7 +71,7 @@ function App() {
           }
         />
         <Route
-          path="/calendar"
+          path="/Fleet"
           element={
             <>
               <PageTitle title="Fleet" />
