@@ -7,7 +7,7 @@ import { Fleet, FleetFormData } from "../types/fleet";
 import { DriverDto, FleetCard } from "../types/fleetCard";
 
 // const API = axios.create({ baseURL: process.env.REACT_APP_BASE_URL })
-const API = axios.create({ baseURL: "http://localhost:8080" })
+const API = axios.create({ baseURL: import.meta.env.VITE_API_BASE_URL })
 
 // intercept requests  before they are handled by then or catch
 API.interceptors.request.use((req)=> {
@@ -94,6 +94,8 @@ export const getAllFleets = (id : number) => API.get<FleetCard[]>(`/get-all/${id
 
 export const addDriverToCar = (idManagerFleet: number, vin: string, driver: DriverDto) => 
   API.post<FleetCard>(`/driver-to-car?idManagerFleet=${idManagerFleet}&vin=${vin}`, driver);
+
+export const getGeneraleInfo = (vin: String) => API.get(`/get-salarie/${vin}`);
 
 
 // export const updateFleet = (id: number, fleetData: FleetFormData) => axios.put<Fleet>(`${API_URL}/${id}`, fleetData);

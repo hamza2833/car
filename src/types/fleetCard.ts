@@ -13,7 +13,6 @@ export interface FleetCard {
 //   vin: string;
 //   marque: string;
 //   driverName: string;
-
 // }
 
 export interface DriverDto {

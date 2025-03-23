@@ -1,16 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ClickOutside from '../ClickOutside';
 import UserOne from '../../images/user/user-01.png';
 import { logout } from '../../store/slices/authSlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/store';
+import { getUserFromTokenV2 } from '../../utils/User';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const nagivate = useNavigate();
 
+  const [user, setUser] = useState<any>(null);
+
+   useEffect(() => {
+        setUser(getUserFromTokenV2());
+    },[]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -26,9 +32,9 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            Yassine
+          {user?.sub}
           </span>
-          <span className="block text-xs">Admin</span>
+          <span className="block text-xs">{user?.role}</span>
         </span>
 
         <span className="h-12 w-12 rounded-full">

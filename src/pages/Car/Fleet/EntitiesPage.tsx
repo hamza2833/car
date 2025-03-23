@@ -9,45 +9,45 @@ import secureLocalStorage from 'react-secure-storage';
 import {jwtDecode} from 'jwt-decode';
 
 
-const entitiesData = [
-    {
-      nameEts: "Dlogitique",
-      refDossier : "R124567",
-      nameGestionner: "hassan",
-      email: "hassan@chargiZ",
-      tele: "0743534365",
-      address: "casa",
-      numdrivers: "8 "
-    },
-    {
-      nameEts: "hamrokat",
-      refDossier: "Rref234",
-      nameGestionner: "abdslam",
-      email: "adbslam@chargiZ",
-      tele: "062345678",
-      address: "khouribga",
-      numdrivers: "1 "
-    },
-    {
-      nameEts: "tesla",
-      refDossier: "R123456",
-      nameGestionner: "hamza",
-      email: "hamza@tesla.com",
-      tele: "0645454545",
-      address: "Non spécifiée",
-      numdrivers: "0 "
-    },
-    {
-      nameEts: "raja",
-      refDossier: "Ref234",
-      nameGestionner: "amine",
-      email: "amine@chargiZ.com",
-      tele: "N/A",
-      address: "Non spécifiée",
-      numdrivers: "1 "
-    }
+// const entitiesData = [
+//     {
+//       nameEts: "Dlogitique",
+//       refDossier : "R124567",
+//       nameGestionner: "hassan",
+//       email: "hassan@chargiZ",
+//       tele: "0743534365",
+//       address: "casa",
+//       numdrivers: "8 "
+//     },
+//     {
+//       nameEts: "hamrokat",
+//       refDossier: "Rref234",
+//       nameGestionner: "abdslam",
+//       email: "adbslam@chargiZ",
+//       tele: "062345678",
+//       address: "khouribga",
+//       numdrivers: "1 "
+//     },
+//     {
+//       nameEts: "tesla",
+//       refDossier: "R123456",
+//       nameGestionner: "hamza",
+//       email: "hamza@tesla.com",
+//       tele: "0645454545",
+//       address: "Non spécifiée",
+//       numdrivers: "0 "
+//     },
+//     {
+//       nameEts: "raja",
+//       refDossier: "Ref234",
+//       nameGestionner: "amine",
+//       email: "amine@chargiZ.com",
+//       tele: "N/A",
+//       address: "Non spécifiée",
+//       numdrivers: "1 "
+//     }
   
-];
+// ];
 
 
 const getUserIdFromToken = () => {
@@ -78,18 +78,18 @@ const EntitiesTable = () => {
       <table className="w-full border-collapse text-left text-black dark:text-white">
         <thead>
           <tr className="border-b border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-400">
-           <th className="p-3">Company Name</th>
-           <th className="p-3">File Reference</th>
-           <th className="p-3">Manager Name</th>
-           <th className="p-3">Email</th>
-           <th className="p-3">Phone</th>
-           <th className="p-3">Address</th>
-           <th className="p-3">Number of Drivers</th>
+           <th className="p-3">Nom de l'entreprise</th>
+           <th className="p-3">Référence Dossier</th>
+           <th className="p-3">Nom du gestionnaire</th>
+           <th className="p-3">Email du gestionnaire</th>
+           <th className="p-3">Téléphone du gestionnaire</th>
+           <th className="p-3">Adress du gestionnaire</th>
+           <th className="p-3">Nombre de conducteurs</th>
           </tr>
         </thead>
         <tbody>
-          {//fleets.map((entity, index) => (
-          entitiesData.map((entity, index) => (
+          {fleets.map((entity, index) => (
+         // entitiesData.map((entity, index) => (
             <tr
               key={index}
               className="border-b border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
@@ -261,7 +261,7 @@ const EntitiesPage = () => {
         onClick={() => setIsSidebarOpen(true)}
         className="mb-4 p-3 text-white text-sm bg-red-600 hover:bg-red-700 rounded-lg flex items-center gap-2 font-semibold"
       >
-        <FaTools size={16} /> Set up entities and groups
+        <FaTools size={16} />Configurer les entités et les groupes
       </button>
       <EntitiesTable />
       <EntitySidebar

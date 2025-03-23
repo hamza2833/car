@@ -14,7 +14,7 @@ import { getFleets } from '../../store/slices/fleetSlice';
 import {fetchAllFleets} from '../../store/slices/fleetCardSlice';
 import secureLocalStorage from 'react-secure-storage';
 import {jwtDecode} from 'jwt-decode';
-import { getUserFromToken } from '../../utils/User';
+import { getUserFromToken, getUserFromTokenV2 } from '../../utils/User';
 
 const fleetData = [
   {
@@ -148,64 +148,64 @@ const fleetData = [
   },
 ];
 
-const fleetCardMock = [
-  {
-    driverName: "rachid-rachid",
-    energieTotal: "60Kwh",
-    energieHome: "24Kwh",
-    energiePublic: "18Kwh",
-    energieWork: "18Kwh",
-    distance: "40km",
-  },
-  {
-    driverName: "hamza-hamza",
-    energieTotal: "8029Kwh",
-    energieHome: "1143Kwh",
-    energiePublic: "6643Kwh",
-    energieWork: "243Kwh",
-    distance: "271km",
-  },
-  {
-    driverName: "khalid-khalid",
-    energieTotal: "1494Kwh",
-    energieHome: "918Kwh",
-    energiePublic: "333Kwh",
-    energieWork: "243Kwh",
-    distance: "89km",
-  },
-  {
-    driverName: "ahmed-ahmed",
-    energieTotal: "1474Kwh",
-    energieHome: "918Kwk",
-    energiePublic: "98Kwh",
-    energieWork: "458Kwh",
-    distance: "199km",
-  },
-  {
-    driverName: "samir-samir",
-    energieTotal: "0Kwh",
-    energieHome: "0Kwh",
-    energiePublic: "0Kwh",
-    energieWork: "0Kwh",
-    distance: "0km",
-  },
-  {
-    driverName: "rayan-rayan",
-    energieTotal: "0Kwh",
-    energieHome: "0Kwh",
-    energiePublic: "0Kwh",
-    energieWork: "0Kwh",
-    distance: "0km",
-  },
-  {
-    driverName: "oussama-oussama",
-    energieTotal: "0Kwh",
-    energieHome: "0Kwh",
-    energiePublic: "0Kwh",
-    energieWork: "0Kwh",
-    distance: "0km",
-  }
-]
+// const fleetCardMock = [
+//   {
+//     driverName: "rachid-rachid",
+//     energieTotal: "60Kwh",
+//     energieHome: "24Kwh",
+//     energiePublic: "18Kwh",
+//     energieWork: "18Kwh",
+//     distance: "40km",
+//   },
+//   {
+//     driverName: "hamza-hamza",
+//     energieTotal: "8029Kwh",
+//     energieHome: "1143Kwh",
+//     energiePublic: "6643Kwh",
+//     energieWork: "243Kwh",
+//     distance: "271km",
+//   },
+//   {
+//     driverName: "khalid-khalid",
+//     energieTotal: "1494Kwh",
+//     energieHome: "918Kwh",
+//     energiePublic: "333Kwh",
+//     energieWork: "243Kwh",
+//     distance: "89km",
+//   },
+//   {
+//     driverName: "ahmed-ahmed",
+//     energieTotal: "1474Kwh",
+//     energieHome: "918Kwk",
+//     energiePublic: "98Kwh",
+//     energieWork: "458Kwh",
+//     distance: "199km",
+//   },
+//   {
+//     driverName: "samir-samir",
+//     energieTotal: "0Kwh",
+//     energieHome: "0Kwh",
+//     energiePublic: "0Kwh",
+//     energieWork: "0Kwh",
+//     distance: "0km",
+//   },
+//   {
+//     driverName: "rayan-rayan",
+//     energieTotal: "0Kwh",
+//     energieHome: "0Kwh",
+//     energiePublic: "0Kwh",
+//     energieWork: "0Kwh",
+//     distance: "0km",
+//   },
+//   {
+//     driverName: "oussama-oussama",
+//     energieTotal: "0Kwh",
+//     energieHome: "0Kwh",
+//     energiePublic: "0Kwh",
+//     energieWork: "0Kwh",
+//     distance: "0km",
+//   }
+// ]
 
 function DashboardCar() {
 
@@ -221,7 +221,9 @@ function DashboardCar() {
 
   const { fleetCard} = useSelector((state: RootState) => state.fleetCard);
 
-  const [selectedFleet, setSelectedFleet] = useState('Dlogistique');
+  const [selectedFleet, setSelectedFleet] = useState(3);
+
+  const [basculer , setBasculer] = useState(true);
 
 
   const getUserIdFromToken = () => {
@@ -250,8 +252,8 @@ function DashboardCar() {
 
   useEffect(() => {
     //if (fleets.length > 0) {
-     // setSelectedFleet(fleets[0]?.nameEts); 
-     setSelectedFleet('Dlogistique'); 
+      setSelectedFleet(fleets[2]?.id); 
+     //setSelectedFleet('Dlogistique'); 
   //  }
   }, [fleets]);
   
@@ -269,10 +271,15 @@ function DashboardCar() {
   }, [dispatch, selectedFleet]);
 
   
-  //  useEffect(() => {
-  //         if (!getUserFromToken()) navigate('/auth/signin')
-  //     }, [])
+   useEffect(() => {
+          if (!getUserFromToken()) navigate('/auth/signin')
+      }, [])
   
+     const [user, setUser] = useState<any>(null);  
+    
+      useEffect(() => {
+          setUser(getUserFromTokenV2());
+      },[]);
     
 
 
@@ -289,22 +296,22 @@ function DashboardCar() {
 
     const navigate = useNavigate();
 
-    const totalAll = fleetCardMock.reduce((sum, driver) => {
+    const totalAll = fleetCard.reduce((sum, driver) => {
       const numericCost = parseFloat(driver.energieTotal.replace('Kwh', '').replace(',', '.'));
       return sum + (isNaN(numericCost) ? 0 : numericCost);
     }, 0);
 
-  const totalWork = fleetCardMock.reduce((sum, driver) => {
+  const totalWork = fleetCard.reduce((sum, driver) => {
       const numericCost = parseFloat(driver.energieWork.replace('Kwh', '').replace(',', '.'));
       return sum + (isNaN(numericCost) ? 0 : numericCost);
     }, 0);
 
-  const totalHome = fleetCardMock.reduce((sum, driver) => {
+  const totalHome = fleetCard.reduce((sum, driver) => {
       const numericCost = parseFloat(driver.energieHome.replace('Kwh', '').replace(',', '.'));
       return sum + (isNaN(numericCost) ? 0 : numericCost);
     }, 0);
                      //fleetCard
-  const totalPubic = fleetCardMock.reduce((sum, driver) => {
+  const totalPubic = fleetCard.reduce((sum, driver) => {
       const numericCost = parseFloat(driver.energiePublic.replace('Kwh', '').replace(',', '.'));
       return sum + (isNaN(numericCost) ? 0 : numericCost);
     }, 0);
@@ -329,22 +336,29 @@ function DashboardCar() {
             <option>July 2024</option>
             <option>June 2024</option>
           </select>
-          <div className="flex items-center gap-2 p-2 bg-gray-200 dark:bg-gray-700 rounded">
-            <FaFilter className="text-gray-600 dark:text-gray-300" />
-            <select
-              className="bg-transparent  text-black dark:text-white focus:outline-none"
-              value={selectedFleet}
-              onChange={(e) => setSelectedFleet(e.target.value)}
-            >
-             {/* {
-                // fleets.map((fleet) => (
-                //   <option key={fleet.id} value={fleet.id}>{fleet.nameEts}</option>
-                // ))
-                
-             } */}
-             <option value="Dlogistique">Dlogistique</option>
-            </select>
-          </div>
+          {user?.role === 'Admin' && (
+             <div className="flex items-center gap-2 p-2 bg-gray-200 dark:bg-gray-700 rounded">
+             <FaFilter className="text-gray-600 dark:text-gray-300" />
+             <select
+               className="bg-transparent text-black dark:text-white focus:outline-none"
+               value={selectedFleet}
+               onChange={(e) => setSelectedFleet(e.target.value)}
+             >
+              {
+                 fleets.map((fleet) => (
+                   <option key={fleet.id} value={fleet.id}>{fleet.nameEts}</option>
+                 ))
+                 
+              }
+              {/* <option value="Dlogistique">Dlogistique</option> */}
+             </select>
+           </div>
+          )}
+           <button 
+           onClick={() => setBasculer(!basculer)}
+           className={`text-black p-2 rounded bg-gray-200 text-center w-42 hover:opacity-70 `}>
+             Basculer vers {basculer ? 'Kwh' : '€'}
+          </button>
         </div>
 
         <button
@@ -352,69 +366,73 @@ function DashboardCar() {
           className=" flex items-center gap-2 p-3 bg-gradient-to-r from-red-600 via-orange-600 to-red-500 text-white rounded-lg shadow-md hover:opacity-90 transition"
         >
           <FaPlus size={14} />
-          Add drivers
+          Ajouter des pilotes
         </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
         <DashboardCard
-          title="All locations"
-          amount={`€${(parseFloat(totalAll.toFixed(0)) * 0.2016).toFixed(2)}`}
+          title="Tous les emplacements"
+          amount={`€${(parseFloat(totalAll.toFixed(0)) * 0.2).toFixed(2)}`}
           average="€107"
           icon={<span className="text-xl">📊</span>}
-          bgColor="bg-gradient-to-r from-orange-500 to-pink-500"
+          // bgColor="bg-gradient-to-r from-orange-500 to-pink-500"
+          bgColor="#F2C744"
         />
         <DashboardCard
-          title="Home"
-          amount={`€${(parseFloat(totalHome.toFixed(0)) * 0.2016).toFixed(2)}`}
+          title="Domicile"
+          amount={`€${(parseFloat(totalHome.toFixed(0)) * 0.2).toFixed(2)}`}
           average="€44"
           icon={<span className="text-xl">🏠</span>}
-          bgColor="bg-gradient-to-r from-yellow-500 to-orange-500"
+          // bgColor="bg-gradient-to-r from-yellow-500 to-orange-500"
+          bgColor="#F2C744"
         />
         <DashboardCard
-          title="Public"
-          amount={`€${(parseFloat(totalPubic.toFixed(0)) * 0.2016).toFixed(2)}`}
+          title="Publique"
+          amount={`€${(parseFloat(totalPubic.toFixed(0)) * 0.2).toFixed(2)}`}
           average="€41"
           icon={<span className="text-xl">🚏</span>}
-          bgColor="bg-gradient-to-r from-pink-500 to-red-500"
+          // bgColor="bg-gradient-to-r from-pink-500 to-red-500"
+          bgColor="#F2C744"
         />
         <DashboardCard
-          title="Work"
-          amount={`€${(parseFloat(totalWork.toFixed(0)) * 0.2016).toFixed(2)}`}
+          title="Trvail"
+          amount={`€${(parseFloat(totalWork.toFixed(0)) * 0.2).toFixed(2)}`}
           average="€23"
           icon={<span className="text-xl">💼</span>}
-          bgColor="bg-gradient-to-r from-green-500 to-teal-500"
+          // bgColor="bg-gradient-to-r from-green-500 to-teal-500"
+          bgColor="#F2C744"
         />
       </div>
-      {//fleetCard.length > 0 ? (
-      fleetCardMock.length > 0 ? (
+      {fleetCard.length > 0 ? (
+      //fleetCardMock.length > 0 ? (
 
         <div>
           <div className="overflow-x-auto bg-white dark:bg-gray-900 p-4 rounded-lg shadow-lg">
             <table className="w-full border-collapse text-left text-black dark:text-white">
               <thead>
                 <tr  className="border-b border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-400">
-                  <th className="p-3">Name</th>
-                  <th className="p-3">Total Cost</th>
-                  <th className="p-3">Home</th>
-                  <th className="p-3">Public</th>
-                  <th className="p-3">Work</th>
+                  <th className="p-3">Nom</th>
+                  <th className="p-3">Coùt total</th>
+                  <th className="p-3">Domicile</th>
+                  <th className="p-3">Publique</th>
+                  <th className="p-3">Travail</th>
                   <th className="p-3">Distance</th>
                   <th className="p-3">Cost /100km</th>
                 </tr>
               </thead>
               <tbody>
-                {//fleetCard.map((driver, index) => (
-                fleetCardMock.map((driver, index) => (
-                  <tr onClick={()=> navigate("/scene")}
+                {fleetCard.map((driver, index) => (
+               // fleetCardMock.map((driver, index) => (
+                  <tr onClick={()=> navigate("/conducteur", {state: {vin : driver.vin}})}
                     key={index}
                     className="cursor-pointer border-b border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
                   >
                     <td className="p-3">{driver.driverName}</td>
-                    <td className="p-3">{driver.energieTotal}</td>
-                    <td className="p-3">{driver.energieWork}</td>
-                    <td className="p-3">{driver.energieHome}</td>
-                    <td className="p-3">{driver.energiePublic}</td>
+                    <td className="p-3">{basculer ? driver.energieTotal : `€${(parseFloat(driver.energieTotal.replace('Kwh', '').replace(',', '.')) * 0.2).toFixed(2)}`}</td>
+                    <td className="p-3">{basculer ? driver.energieHome : `€${(parseFloat(driver.energieTotal.replace('Kwh', '').replace(',', '.')) * 0.2).toFixed(2)}`}</td>
+                    <td className="p-3">{basculer ? driver.energiePublic : `€${(parseFloat(driver.energieHome.replace('Kwh', '').replace(',', '.')) * 0.2).toFixed(2)}`}</td>
+                    <td className="p-3">{basculer ? driver.energieWork : `€${(parseFloat(driver.energiePublic.replace('Kwh', '').replace(',', '.')) * 0.2).toFixed(2)}`}</td>
                     <td className="p-3">{driver.distance}</td>
                     <td className="p-3">N/A</td>
                   </tr>

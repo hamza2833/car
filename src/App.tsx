@@ -16,6 +16,8 @@ import EntitiesPage from './pages/Car/Fleet/EntitiesPage';
 import Scene from './pages/Car/migrations/Scene';
 import Data from './pages/Car/migrations/Data';
 import HeaderDetails from './pages/Car/migrations/HeaderDetails';
+import ProtectedRoute from './route/ProtectedRoute';
+import Conducteur from './pages/Car/migrations/Conducteur';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -70,6 +72,7 @@ function App() {
             </>
           }
         />
+        <Route element={<ProtectedRoute allowedRoles={["Admin"]} />}>
         <Route
           path="/Fleet"
           element={
@@ -79,6 +82,7 @@ function App() {
             </>
           }
         />
+        </Route>
 
         <Route
           path="/profile"
@@ -105,6 +109,16 @@ function App() {
             <>
               <PageTitle title="Car details" />
               <Data />
+            </>
+          }
+        />
+
+     <Route
+          path="/conducteur"
+          element={
+            <>
+              <PageTitle title="conducteur details" />
+              <Conducteur />
             </>
           }
         />

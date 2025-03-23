@@ -68,7 +68,7 @@ const GridItem: React.FC<GridItemProps> = ({ label, value, unit, etat, img }) =>
 // Main Data Component
 const Data: React.FC = () => {
   return (
-    <div className="bg-gray-100 dark:bg-[#121212] min-h-screen p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 transition-all duration-300">
+    <div className="bg-gray-100 dark:bg-[#121212] min-h-screen p-8 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3  gap-6 transition-all duration-300">
       {data.map((item, index) => (
         <GridItem key={index} label={item.label} value={item.value} unit={item.unit} etat={item.etat} img={item.img} />
       ))}

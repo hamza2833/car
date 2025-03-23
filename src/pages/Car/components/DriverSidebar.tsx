@@ -42,27 +42,27 @@ const DriverSidebar = ({ isOpen, onClose ,idManagerFleet}: any) => {
     >
       <div>
         <div className="p-4 flex justify-between border-b border-gray-700">
-          <h2 className="text-lg font-semibold">Invite drivers</h2>
+          <h2 className="text-lg font-semibold">Inviter des conducteurs</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-white">
             ✖
           </button>
         </div>
         <div className="p-4 space-y-4">
           <div>
-            <label className="block text-sm text-gray-400 mb-1">FIRST NAME</label>
+            <label className="block text-sm text-gray-400 mb-1">PRENOM</label>
             <input
               className="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-primary"
-              placeholder="name driver"
+              placeholder="Prénom conducteur"
               type='text'
               value={driverDto.name}
               onChange={(e) => setDriverDto({...driverDto,name:e.target.value})}
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-400 mb-1">LAST NAME</label>
+            <label className="block text-sm text-gray-400 mb-1">NOM DE FAMILLE</label>
             <input
               className="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-primary"
-              placeholder="prenom driver"
+              placeholder="prénom conducteur"
               type='text'
               value={driverDto.prenom}
               onChange={(e) => setDriverDto({...driverDto,prenom:e.target.value})}
@@ -72,14 +72,14 @@ const DriverSidebar = ({ isOpen, onClose ,idManagerFleet}: any) => {
             <label className="block text-sm text-gray-400 mb-1">ADDRESS </label>
             <input
               className="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-primary"
-              placeholder="address driver"          
+              placeholder="pilote d'adresse"          
               type='text'
               value={driverDto.address}
               onChange={(e) => setDriverDto({...driverDto,address:e.target.value})}
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-400 mb-1">ENTITY</label>
+            <label className="block text-sm text-gray-400 mb-1">ENTITE</label>
             <div className="relative">
               {/* <select className="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-primary appearance-none"
                 value={selectedFleet}
@@ -93,7 +93,7 @@ const DriverSidebar = ({ isOpen, onClose ,idManagerFleet}: any) => {
               </select> */}
               <input
               className="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white focus:ring-2 focus:ring-primary"
-              placeholder="Enter vin"
+              placeholder="Enter Le vin"
               type='text'
               value={selectedFleet}
               onChange={(e) => setSelectedFleet(e.target.value)}
@@ -110,13 +110,13 @@ const DriverSidebar = ({ isOpen, onClose ,idManagerFleet}: any) => {
           <button className="w-full p-3 bg-red-600 hover:bg-red-700 rounded-lg font-semibold flex items-center gap-2"
            onClick={handleSave}>
             <FaSave />
-            <span className='ml-3'>Save</span>
+            <span className='ml-3'>Sauvegarder</span>
           </button>
           <button
             onClick={onClose}
             className="w-full p-3 bg-gray-700 hover:bg-gray-600 rounded-lg font-semibold"
           >
-            Cancel
+            Annuler
           </button>
         </div>
       </div>

@@ -10,7 +10,9 @@ interface CardProps {
 
 const DashboardCard: React.FC<CardProps> = ({ title, amount, average, icon, bgColor }) => {
   return (
-    <div className={`p-4 rounded-xl shadow-md ${bgColor} flex flex-col items-start text-white hover:scale-105 transition-transform duration-200`}>
+    <div className={`p-4 rounded-xl shadow-md flex flex-col items-start text-white hover:scale-105 transition-transform duration-200`}
+    style={{ backgroundColor: bgColor }}
+    >
       <div className="flex items-center justify-between w-full">
         <h3 className="text-lg font-semibold">{title}</h3>
         {icon}

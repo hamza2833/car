@@ -101,8 +101,8 @@ const Settings = () => {
                           type="text"
                           name="fullName"
                           id="fullName"
-                          placeholder="Devid Jhon"
-                          defaultValue="Devid Jhon"
+                          placeholder=""
+                          defaultValue=""
                         />
                       </div>
                     </div>
@@ -119,8 +119,8 @@ const Settings = () => {
                         type="text"
                         name="phoneNumber"
                         id="phoneNumber"
-                        placeholder="+990 3343 7865"
-                        defaultValue="+990 3343 7865"
+                        placeholder="phone"
+                        defaultValue=""
                       />
                     </div>
                   </div>
@@ -163,8 +163,8 @@ const Settings = () => {
                         type="email"
                         name="emailAddress"
                         id="emailAddress"
-                        placeholder="hamza12@gmail.com"
-                        defaultValue="hamza12@gmail.com"
+                        placeholder="email"
+                        defaultValue=""
                       />
                     </div>
                   </div>
@@ -181,8 +181,8 @@ const Settings = () => {
                       type="text"
                       name="Username"
                       id="Username"
-                      placeholder="userhamza24"
-                      defaultValue="userhamza24"
+                      placeholder="Username"
+                      defaultValue=""
                     />
                   </div>
 

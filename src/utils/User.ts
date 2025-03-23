@@ -27,3 +27,17 @@ export const getUserFromToken = () => {
   };
 
 
+  export const getUserFromTokenV2 = () => {
+    const token:any = secureLocalStorage.getItem("token"); // Récupère le token stocké
+    if (!token) return null; // Vérifie si le token est présent
+  
+    try {
+      const decodedToken: any = jwtDecode(token); // Décode le token
+      return decodedToken; // Retourne l'ID
+    } catch (error) {
+      console.error("Erreur lors du décodage du token:", error);
+      return null;
+    }
+  };
+
+
